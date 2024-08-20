@@ -14,7 +14,7 @@ git push       表示資料提交上github
 ###如何同步資料內容一次抓取?
 git pull
 
-###如何建立分支?
+###如何建立分支? (合併後即可刪除)
 git checkout -b branch2
 >checkout 切換分支
 >-b 建立並切換成新的分支
@@ -31,3 +31,4 @@ git push origin branch2
 #分支傳送的人要在 <code> 按 "New pull request"，請求合併>>可能會需要輸入改了什麼
 #request changes 重新提交>要求提交分支的人重做
 
+hk4g4jnububuibyutc6ihuuhgit
