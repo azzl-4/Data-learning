@@ -1,3 +1,4 @@
+#%%
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 import re
@@ -7,7 +8,7 @@ import matplotlib.pyplot as plt
 # 讀取 CSV 檔案
 file_path = 'Suicide_Detection.csv'
 df = pd.read_csv(file_path)
-
+#%%
 # 篩選出標記為 'suicide' 的文本
 suicide_texts = df[df['class'] == 'suicide']['text']
 
@@ -44,3 +45,5 @@ plt.show()
 print("Top 20 frequent words in 'suicide' texts:")
 for word, freq in freq_words[:20]:
     print(f"{word}: {freq}")
+
+# %%
