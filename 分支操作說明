@@ -1,0 +1,33 @@
+進專案中按"code"複製程式碼連結 ex:https://github.com/作者/project名稱.git
+進入自己的vscode的終端機輸入: git clone 連結
+
+正常run後會出現資料夾 > 在終端機輸入 cd 資料夾名稱(不是檔案)    #目的是導入到該project目錄
+不正常者要自己去檔案總館找到那筆資料點開，不需要輸入cd
+
+###更新後如何update?
+git add .    
+git commit -m "這裡請輸入編輯了哪裡"
+git push       表示資料提交上github
+>add.表示[全部]資料要追蹤 英文變A
+>commit 表示A的資料 存檔
+
+###如何同步資料內容一次抓取?
+git pull
+
+###如何建立分支?
+git checkout -b branch2
+>checkout 切換分支
+>-b 建立並切換成新的分支
+>branch2 分支名稱(請統一不然很亂)
+
+###分支儲存+推送辦法
+git add.
+git add 指定專案名稱.py/.html....
+git commit -m "做了啥"
+git push origin branch2
+>>origin   遠端名稱
+>>branch2  分支名稱(請統一不然很亂)
+
+#分支傳送的人要在 <code> 按 "New pull request"，請求合併>>可能會需要輸入改了什麼
+#request changes 重新提交>要求提交分支的人重做
+
