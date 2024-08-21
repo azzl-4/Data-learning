@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-#%%
 import nltk
 import seaborn as sns
 import numpy as np
@@ -60,7 +59,7 @@ X_tfidf = tfidf_vectorizer.fit_transform(cleaned_texts)
 # Get top words based on TF-IDF
 tfidf_scores = zip(tfidf_vectorizer.get_feature_names_out(), X_tfidf.sum(axis=0).tolist()[0])
 tfidf_scores = sorted(tfidf_scores, key=lambda x: x[1], reverse=True)
-top_20_words = [word for word, score in tfidf_scores[:20]]
+top_20_words = [word for word, score in tfidf_scores[:100]]
 # %%
 # Compute word counts
 count_vectorizer = CountVectorizer(vocabulary=top_20_words)
