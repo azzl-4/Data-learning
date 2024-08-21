@@ -90,7 +90,7 @@ def generate_gradient_colors(n, start_color, end_color):
     return [cmap(i / (n - 1)) for i in range(n)]
 
 # Define a color gradient
-top_words_df = pd.DataFrame(freq_counts[:100], columns=['Word', 'Frequency'])
+top_words_df = pd.DataFrame(freq_counts[:20], columns=['Word', 'Frequency'])
 plt.figure(figsize=(12, 8))
 start_color = '#f7f7f7'  # Light grey
 end_color = '#005f73'    # Dark teal
