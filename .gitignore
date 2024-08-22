@@ -1,3 +1,7 @@
 .venv
 .csv
 .git
+train.py
+results
+saved_model
+logs
