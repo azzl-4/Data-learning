@@ -42,14 +42,14 @@ print(df['sentiment_score'].head())
 #%% 2. Bag of Words Transformation (TF-IDF)
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Compute TF-IDF
-tfidf_vectorizer = TfidfVectorizer(max_features=100, ngram_range=(1, 2), stop_words=custom_stop_words)
-X_tfidf = tfidf_vectorizer.fit_transform(df['cleaned_text'])
+#這段好像用不到嗎 Compute TF-IDF
+#tfidf_vectorizer = TfidfVectorizer(max_features=100, ngram_range=(1, 2), stop_words=custom_stop_words)
+#X_tfidf = tfidf_vectorizer.fit_transform(df['cleaned_text'])
 
 # Get top words based on TF-IDF
-tfidf_scores = zip(tfidf_vectorizer.get_feature_names_out(), X_tfidf.sum(axis=0).tolist()[0])
-tfidf_scores = sorted(tfidf_scores, key=lambda x: x[1], reverse=True)
-top_20_words = [word for word, score in tfidf_scores[:100]]
+#tfidf_scores = zip(tfidf_vectorizer.get_feature_names_out(), X_tfidf.sum(axis=0).tolist()[0])
+#tfidf_scores = sorted(tfidf_scores, key=lambda x: x[1], reverse=True)
+#top_20_words = [word for word, score in tfidf_scores[:100]]
 
 #%% 3. Word Embeddings (Word2Vec and BERT)
 from gensim.models import Word2Vec
@@ -77,7 +77,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 # Compute word counts
 count_vectorizer = CountVectorizer(vocabulary=top_20_words)
-X_count = count_vectorizer.fit_transform(df['cleaned_text'])
+X_count = count_vectorizer.fit_transform(df[df['class']=='suicide']['cleaned_text'])
 freq_counts = zip(count_vectorizer.get_feature_names_out(), X_count.sum(axis=0).tolist()[0])
 freq_counts = sorted(freq_counts, key=lambda x: x[1], reverse=True)
 
@@ -93,3 +93,41 @@ plt.figure(figsize=(10, 5))
 plt.imshow(wordcloud, interpolation="bilinear")
 plt.axis("off")
 plt.show()
+#%%
+# Display top 20 words with frequencies
+print("Top 20 frequent words in 'suicide' texts (by count):")
+for word, freq in freq_counts[:20]:
+    print(f"{word}: {freq}")
+# %%
+# Function to generate a list of colors for the gradient
+def generate_gradient_colors(n, start_color, end_color):
+    """Generate a list of colors transitioning from start_color to end_color."""
+    cmap = plt.get_cmap('Blues')  # You can use any colormap or create a custom one
+    return [cmap(i / (n - 1)) for i in range(n)]
+
+# Define a color gradient
+top_words_df = pd.DataFrame(freq_counts[:20], columns=['Word', 'Frequency'])
+plt.figure(figsize=(12, 8))
+start_color = '#f7f7f7'  # Light grey
+end_color = '#005f73'    # Dark teal
+n_colors = len(top_words_df)
+
+# Generate the gradient colors
+palette = generate_gradient_colors(n_colors, start_color, end_color)[::-1]  # Reverse the order
+
+# Plot the bar chart with gradient colors
+bars = plt.barh(top_words_df['Word'], top_words_df['Frequency'], color=palette)
+
+# Add value labels to bars
+for bar in bars:
+    width = bar.get_width()
+    plt.text(width, bar.get_y() + bar.get_height()/2, f'{int(width)}', va='center')
+
+plt.xlabel('Frequency')
+plt.title('Top 20 Frequent Words in Suicide Texts')
+plt.gca().invert_yaxis()
+plt.show()
+# Plot bar chart for top 20 words
+top_words_df = pd.DataFrame(freq_counts[:100], columns=['Word', 'Frequency'])
+plt.figure(figsize=(12, 8))
+# %%
