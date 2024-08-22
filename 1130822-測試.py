@@ -5,6 +5,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 #%%
@@ -14,6 +15,7 @@ df = pd.read_csv(file_path)
 
 # Initialize lemmatizer
 lemmatizer = WordNetLemmatizer()
+sia = SentimentIntensityAnalyzer()
 #%%
 # Extend stop words list
 custom_stop_words = list(ENGLISH_STOP_WORDS.union(set(stopwords.words('english'))))
@@ -29,10 +31,14 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text)
     text = ' '.join([lemmatizer.lemmatize(word) for word in text.split() if word not in custom_stop_words])
     return text
-
+# Function to get sentiment scores
+def get_sentiment(text):
+    sentiment = sia.polarity_scores(text)
+    return sentiment['compound']  # Compound score
 # Clean all texts
 df['cleaned_text'] = df['text'].apply(clean_text)
-
+df['sentiment_score'] = df['cleaned_text'].apply(get_sentiment)
+print(df['sentiment_score'].head())
 #%% 2. Bag of Words Transformation (TF-IDF)
 from sklearn.feature_extraction.text import TfidfVectorizer
 
