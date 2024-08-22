@@ -1,5 +1,5 @@
 .venv
-.csv
+*.csv
 .git
 train.py
 results
