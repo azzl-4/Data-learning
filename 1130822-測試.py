@@ -42,14 +42,14 @@ print(df['sentiment_score'].head())
 #%% 2. Bag of Words Transformation (TF-IDF)
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-#這段好像用不到嗎 Compute TF-IDF
-#tfidf_vectorizer = TfidfVectorizer(max_features=100, ngram_range=(1, 2), stop_words=custom_stop_words)
-#X_tfidf = tfidf_vectorizer.fit_transform(df['cleaned_text'])
+# Compute TF-IDF
+tfidf_vectorizer = TfidfVectorizer(max_features=100, ngram_range=(1, 2), stop_words=custom_stop_words)
+X_tfidf = tfidf_vectorizer.fit_transform(df['cleaned_text'])
 
 # Get top words based on TF-IDF
-#tfidf_scores = zip(tfidf_vectorizer.get_feature_names_out(), X_tfidf.sum(axis=0).tolist()[0])
-#tfidf_scores = sorted(tfidf_scores, key=lambda x: x[1], reverse=True)
-#top_20_words = [word for word, score in tfidf_scores[:100]]
+tfidf_scores = zip(tfidf_vectorizer.get_feature_names_out(), X_tfidf.sum(axis=0).tolist()[0])
+tfidf_scores = sorted(tfidf_scores, key=lambda x: x[1], reverse=True)
+top_20_words = [word for word, score in tfidf_scores[:100]]
 
 #%% 3. Word Embeddings (Word2Vec and BERT)
 from gensim.models import Word2Vec
