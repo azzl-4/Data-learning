@@ -160,7 +160,11 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 tfidf_vectorizer = TfidfVectorizer(max_features=5000, stop_words='english')
 X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
 X_test_tfidf = tfidf_vectorizer.transform(X_test)
+#%%
+X_train_tfidf 
+X_test_tfidf
  #%%
+ 
 # 訓練隨機森林模型，減少樹的數量以加快速度
 model2 = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
 model2.fit(X_train_tfidf, y_train)

@@ -30,3 +30,9 @@ git push origin branch2
 
 #分支傳送的人要在 <code> 按 "New pull request"，請求合併>>可能會需要輸入改了什麼
 #request changes 重新提交>要求提交分支的人重做
+
+###分支如何刪除?
+>>in the git:
+git branch -d <branch-name>
+>>in the github:
+git push origin --delete <branch-name>
