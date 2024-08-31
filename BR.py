@@ -1,81 +1,71 @@
 #%%
-import torch
-from transformers import BertTokenizer, BertForSequenceClassification
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix, roc_curve, auc
 
-class SuicideRiskEvaluator:
-    def __init__(self, model_path, tokenizer_name='bert-base-uncased'):
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.tokenizer = BertTokenizer.from_pretrained(tokenizer_name)
-        self.model = BertForSequenceClassification.from_pretrained(model_path)
-        self.model.to(self.device)
-        self.model.eval()
+#%% 可視化混淆矩陣
+def plot_confusion_matrix(y_true, y_pred, class_names):
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(6, 4))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+    plt.title('Confusion Matrix')
+    plt.show()
 
-    def evaluate_sentence(self, sentence, neutral_threshold=0.1):
-        # Tokenize the input sentence
-        encoding = self.tokenizer.encode_plus(
-            sentence,
-            max_length=128,
-            padding='max_length',
-            truncation=True,
-            return_tensors='pt'
-        )
+#%% ROC曲線和AUC
+def plot_roc_curve(y_true, y_pred_prob):
+    fpr, tpr, thresholds = roc_curve(y_true, y_pred_prob)
+    roc_auc = auc(fpr, tpr)
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic (ROC)')
+    plt.legend(loc='lower right')
+    plt.grid()
+    plt.show()
 
-        input_ids = encoding['input_ids'].to(self.device)
-        attention_mask = encoding['attention_mask'].to(self.device)
+#%% 學習曲線
+def plot_learning_curve(train_losses, val_losses):
+    epochs = range(1, len(train_losses) + 1)
+    plt.figure(figsize=(12, 5))
 
-        # Perform inference
-        with torch.no_grad():
-            outputs = self.model(input_ids, attention_mask=attention_mask)
-            logits = outputs.logits
-            probabilities = torch.nn.functional.softmax(logits, dim=1)
-        
-        prob = probabilities.cpu().numpy()[0]
+    # Plot training and validation loss
+    plt.subplot(1, 2, 1)
+    plt.plot(epochs, train_losses, 'o-', label='Training loss')
+    plt.plot(epochs, val_losses, 'o-', label='Validation loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training and Validation Loss')
+    plt.legend()
 
-        # Determine the class
-        if abs(prob[0] - prob[1]) < neutral_threshold:
-            classification = "Neutral"
-        else:
-            classification = "Suicide" if prob[1] > prob[0] else "Non-suicide"
+    plt.tight_layout()
+    plt.show()
 
-        return {
-            'text': sentence,
-            'classification': classification,
-            'suicide_probability': prob[1],
-            'non_suicide_probability': prob[0]
-        }
-
-    def evaluate_sentences(self, sentences, neutral_threshold=0.1):
-        results = []
-        for sentence in sentences:
-            result = self.evaluate_sentence(sentence, neutral_threshold)
-            results.append(result)
-        return results
-
+#%% 使用保存的結果進行可視化
 if __name__ == "__main__":
-    # Initialize evaluator with the trained model path
-    model_path = './suicide_detection_model'
-    evaluator = SuicideRiskEvaluator(model_path)
+    # 讀取保存的结果
+    data = np.load('roberta_results.npz')
+    
+    train_labels = data['train_labels']
+    train_preds = data['train_preds']
+    val_labels = data['val_labels']
+    val_preds = data['val_preds']
+    train_losses = data['train_losses']
+    val_losses = data['val_losses']
 
-    # Example sentences to evaluate
-    sentences = [
-        "I feel like I can't go on any longer. Everything seems hopeless.",
-        "I don't see a way out of this pain. I'm contemplating ending my life.",
-        "I'm overwhelmed with sadness and can't see a future for myself.",
-        "Today was a good day. I had a great time with friends.",
-        "I am excited about my upcoming vacation. Things are looking positive.",
-        "I had a productive day at work and feel good about my progress.",
-        "I sometimes think about giving up, but I want to keep fighting."
-    ]
+    # 可視化混淆矩陣
+    plot_confusion_matrix(val_labels, val_preds, class_names=['Non-suicide', 'Suicide'])
 
-    # Evaluate the sentences
-    results = evaluator.evaluate_sentences(sentences)
+    # 可視化ROC曲線和AUC
+    plot_roc_curve(val_labels, val_preds)
 
-    # Print the results
-    for result in results:
-        print(f"Text: {result['text']}")
-        print(f"Classification: {result['classification']}")
-        print(f"Suicide Probability: {result['suicide_probability']*100:.2f}%")
-        print(f"Non-suicide Probability: {result['non_suicide_probability']*100:.2f}%")
-        print('---')
+    # 可視化學習曲線
+    plot_learning_curve(train_losses, val_losses)
 
 # %%

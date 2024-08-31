@@ -1,7 +1,6 @@
 .venv
 *.csv
 .git
-train.py
 results
 saved_model
 logs
@@ -10,5 +9,13 @@ wordnet_unzipped
 *.txt
 QQ
 suicide_detection_model
-BT.py
 *.PNG
+*.rar
+suicide_detection_model_best
+suicide_detection_roberta_model
+*.zip
+*.pkl
+*.joblib
+*.npz
+*.json
+train.py
