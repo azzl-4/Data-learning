@@ -202,3 +202,6 @@ predict_button.pack(pady=20, ipadx=10, ipady=5)
 root.mainloop()
 
 # %%
+
+#I don't see a way out of this pain. I'm contemplating ending my life自殺範例
+#I am excited about my upcoming vacation. Things are looking positive非自殺範例
