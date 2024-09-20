@@ -19,3 +19,6 @@ suicide_detection_roberta_model
 *.npz
 *.json
 train.py
+build
+dist
+
