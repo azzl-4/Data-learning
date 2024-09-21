@@ -1,4 +1,4 @@
-# main.spec
+# main.spec 把Python應用打包成一個可執行的檔案。成獨立的應用程序
 # -*- mode: python ; coding: utf-8 -*-
 
 import os
