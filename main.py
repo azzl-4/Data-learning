@@ -1,4 +1,4 @@
-# main.py
+# main.py 整合和運行自殺風險預測的邏輯
 #%%
 import joblib
 import tkinter as tk
