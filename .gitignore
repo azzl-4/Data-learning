@@ -12,3 +12,5 @@ QQ
 suicide_detection_model
 BT.py
 *.PNG
+*.joblib
+*.pkl
